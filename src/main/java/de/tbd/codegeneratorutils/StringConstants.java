@@ -6,6 +6,8 @@ public interface StringConstants {
 
     String close = ")";
 
+    String comma = ",";
+
     String curlyOpen = "{";
 
     String curlyClose = "}";

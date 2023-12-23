@@ -8,8 +8,12 @@ public abstract class AbstractCodable implements Codable, StringConstants {
         append(0, strings);
     }
 
-    protected void append(int tablevel, String... strings) {
-        sb.append("    ".repeat(Math.max(0, tablevel)));
+    protected void append(int tabLevel, String... strings) {
+        sb.append("    ".repeat(Math.max(0, tabLevel)));
         for (String s : strings) sb.append(s);
+    }
+
+    protected String write() {
+        return sb.toString();
     }
 }
