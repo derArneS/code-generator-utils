@@ -116,7 +116,7 @@ public class Class extends AbstractCodable {
 
             for (java.lang.reflect.Method method : methods) {
                 append(1, "@Override", newLine);
-                append(1, Method.getModifierAsString(method.getModifiers()));
+                append(1, Utils.getModifierAsString(method.getModifiers()));
                 append(space, method.getReturnType().getSimpleName());
                 append(space, method.getName(), open);
 
