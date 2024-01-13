@@ -4,4 +4,6 @@ public interface Codable {
 
     String getCodeAsString();
 
+    String getCodeAsString(int tabLevel);
+
 }

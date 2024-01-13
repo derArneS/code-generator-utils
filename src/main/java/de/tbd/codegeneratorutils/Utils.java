@@ -1,16 +1,14 @@
 package de.tbd.codegeneratorutils;
 
-import java.lang.reflect.Modifier;
-
 public class Utils {
 
-    public static String getModifierAsString(int modifier) {
-        if (Modifier.isPublic(modifier)) {
-            return "public";
-        } else if (Modifier.isProtected(modifier)) {
-            return "protected";
-        } else if (Modifier.isPrivate(modifier)) {
-            return "private";
+    public static Modifier getModifier(int modifier) {
+        if (java.lang.reflect.Modifier.isPublic(modifier)) {
+            return Modifier.PUBLIC;
+        } else if (java.lang.reflect.Modifier.isProtected(modifier)) {
+            return Modifier.PROTECTED;
+        } else if (java.lang.reflect.Modifier.isPrivate(modifier)) {
+            return Modifier.PRIVATE;
         }
 
         throw new UnknownModifierException(String.valueOf(modifier));
