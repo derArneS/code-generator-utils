@@ -2,17 +2,21 @@ package de.tbd.codegeneratorutils.method;
 
 import de.tbd.codegeneratorutils.Pair;
 
-public interface MethodParameter {
+import java.util.List;
 
-    MethodWithParameter withParameters();
+public interface MethodParameter {
 
     MethodCode withoutParameters();
 
-    interface MethodWithParameter {
+    MethodCode withParameter(Pair<Class<?>, String> parameter);
 
-        MethodWithParameter addParameter(Pair<Class<?>, String> parameter);
+    MethodCode withParameters(List<Pair<Class<?>, String>> parameter);
 
-        MethodCode addLastParameter(Pair<Class<?>, String> parameter);
+    MethodCode withParameters(MethodParameterContainer container);
 
+    interface MethodParameterContainer {
+
+        List<Pair<Class<?>, String>> getParameters();
     }
+
 }

@@ -9,7 +9,7 @@ import de.tbd.codegeneratorutils.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Method extends AbstractCodable implements Builder<Method>, MethodAnnotation, MethodAnnotation.MethodWithAnnotation, MethodModifier, MethodReturnType, MethodName, MethodParameter, MethodParameter.MethodWithParameter, MethodCode {
+public class Method extends AbstractCodable implements Builder<Method>, MethodAnnotation, MethodAnnotation.MethodWithAnnotation, MethodModifier, MethodReturnType, MethodName, MethodParameter, MethodCode {
 
     private final List<Annotation> annotations = new ArrayList<>();
 
@@ -46,14 +46,15 @@ public class Method extends AbstractCodable implements Builder<Method>, MethodAn
             for (int i = 1; i < parameters.size(); i++) {
                 append(comma, space, parameters.get(i).getKey().getName(), space, parameters.get(i).getValue());
             }
-
         }
 
         append(close, space, curlyOpen, newLine);
 
-        append(tabLevel + 1, code, semicolon, newLine);
+        if (code != null) {
+            append(tabLevel + 1, code, newLine);
+        }
 
-        append(tabLevel, curlyClose);
+        append(tabLevel, curlyClose, newLine);
 
         return write();
     }
@@ -77,6 +78,12 @@ public class Method extends AbstractCodable implements Builder<Method>, MethodAn
     @Override
     public MethodModifier addLastAnnotation(Annotation annotation) {
         annotations.add(annotation);
+        return this;
+    }
+
+    @Override
+    public MethodReturnType withModifier(Modifier modifier) {
+        this.modifier = modifier;
         return this;
     }
 
@@ -111,24 +118,25 @@ public class Method extends AbstractCodable implements Builder<Method>, MethodAn
     }
 
     @Override
-    public MethodParameter.MethodWithParameter withParameters() {
-        return this;
-    }
-
-    @Override
     public MethodCode withoutParameters() {
         return this;
     }
 
     @Override
-    public MethodParameter.MethodWithParameter addParameter(Pair<Class<?>, String> parameter) {
+    public MethodCode withParameter(Pair<Class<?>, String> parameter) {
         parameters.add(parameter);
         return this;
     }
 
     @Override
-    public MethodCode addLastParameter(Pair<Class<?>, String> parameter) {
-        parameters.add(parameter);
+    public MethodCode withParameters(List<Pair<Class<?>, String>> parameters) {
+        this.parameters.addAll(parameters);
+        return this;
+    }
+
+    @Override
+    public MethodCode withParameters(MethodParameterContainer container) {
+        parameters.addAll(container.getParameters());
         return this;
     }
 

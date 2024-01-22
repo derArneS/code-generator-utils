@@ -1,16 +1,13 @@
 package de.tbd.codegeneratorutils.clazz;
 
+import java.util.List;
+
 public interface ClassSuperClass {
 
-    ClassWithSuperClasses withSuperClasses();
+    ClassInterface withoutSuperClass();
 
-    ClassInterface withoutSuperClasses();
+    ClassInterface withSuperClass(java.lang.Class<?> superClass);
 
-    interface ClassWithSuperClasses {
+    ClassInterface withSuperClasses(List<java.lang.Class<?>> superClasses);
 
-        ClassWithSuperClasses addSuperClass(java.lang.Class<?> superClass);
-
-        ClassInterface addLastSuperClass(java.lang.Class<?> superClass);
-
-    }
 }

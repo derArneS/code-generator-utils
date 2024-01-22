@@ -2,17 +2,14 @@ package de.tbd.codegeneratorutils.clazz;
 
 import de.tbd.codegeneratorutils.annotation.Annotation;
 
-public interface ClassAnnotation {
+import java.util.List;
 
-    ClassWithAnnotation withAnnotation();
+public interface ClassAnnotation {
 
     ClassClassName withoutAnnotation();
 
-    interface ClassWithAnnotation {
+    ClassClassName withAnnotation(Annotation annotation);
 
-        ClassWithAnnotation addAnnotation(Annotation annotation);
+    ClassClassName withAnnotations(List<Annotation> annotation);
 
-        ClassClassName addLastAnnotation(Annotation annotation);
-
-    }
 }

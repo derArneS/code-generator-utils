@@ -1,16 +1,12 @@
 package de.tbd.codegeneratorutils.clazz;
 
-public interface ClassInterface {
+import java.util.List;
 
-    ClassWithInterface withInterfaces();
+public interface ClassInterface {
 
     ClassMethod withoutInterfaces();
 
-    interface ClassWithInterface {
+    ClassMethod withInterface(java.lang.Class<?> _interface);
 
-        ClassWithInterface addInterface(java.lang.Class<?> interface1);
-
-        ClassMethod addLastInterface(java.lang.Class<?> interface1);
-
-    }
+    ClassMethod withInterfaces(List<java.lang.Class<?>> interfaces);
 }

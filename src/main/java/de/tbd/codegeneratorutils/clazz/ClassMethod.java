@@ -3,17 +3,14 @@ package de.tbd.codegeneratorutils.clazz;
 import de.tbd.codegeneratorutils.Builder;
 import de.tbd.codegeneratorutils.method.Method;
 
+import java.util.List;
+
 public interface ClassMethod {
 
-    ClassWithMethod withMethods();
+    Builder<Class> withoutMethod();
 
-    Builder<Class> withoutMethods();
+    Builder<Class> withMethod(Method method);
 
-    interface ClassWithMethod {
+    Builder<Class> withMethods(List<Method> methods);
 
-        ClassWithMethod addMethod(Method method);
-
-        Builder<Class> addLastMethod(Method method);
-
-    }
 }

@@ -14,9 +14,9 @@ public class ClassTest {
                 .withPackage("de.tbd.codegeneratorutils")
                 .withoutAnnotation()
                 .withName("GeneratedTestClass")
-                .withoutSuperClasses()
+                .withoutSuperClass()
                 .withoutInterfaces()
-                .withoutMethods()
+                .withoutMethod()
                 .build()
                 .getCodeAsString();
 
@@ -36,10 +36,9 @@ public class ClassTest {
                 .withPackage("de.tbd.codegeneratorutils")
                 .withoutAnnotation()
                 .withName("GeneratedTestClass")
-                .withoutSuperClasses()
-                .withInterfaces()
-                .addLastInterface(TestInterface.class)
-                .withoutMethods()
+                .withoutSuperClass()
+                .withInterface(TestInterface.class)
+                .withoutMethod()
                 .build()
                 .getCodeAsString();
 
@@ -48,12 +47,12 @@ public class ClassTest {
                                 
                 public class GeneratedTestClass implements TestInterface {
                                 
-                    @Override
-                    public boolean secondTestMethod(String arg0, int arg1) {
+                    @java.lang.Override
+                    public boolean secondTestMethod(java.lang.String arg0, int arg1) {
                     }
                             
-                    @Override
-                    public String testMethod(String arg0) {
+                    @java.lang.Override
+                    public java.lang.String testMethod(java.lang.String arg0) {
                     }
                                 
                 }""";
