@@ -1,4 +1,4 @@
-package de.tbd.codegeneratorutils.clazz;
+package de.tbd.codegeneratorutils._class;
 
 import de.tbd.codegeneratorutils.annotation.Annotation;
 

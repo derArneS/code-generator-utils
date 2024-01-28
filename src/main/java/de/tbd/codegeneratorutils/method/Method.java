@@ -1,11 +1,9 @@
 package de.tbd.codegeneratorutils.method;
 
-import de.tbd.codegeneratorutils.AbstractCodable;
-import de.tbd.codegeneratorutils.Builder;
-import de.tbd.codegeneratorutils.Modifier;
-import de.tbd.codegeneratorutils.Pair;
+import de.tbd.codegeneratorutils.*;
 import de.tbd.codegeneratorutils.annotation.Annotation;
 
+import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,6 +27,28 @@ public class Method extends AbstractCodable implements Builder<Method>, MethodAn
 
     public static MethodAnnotation method() {
         return new Method();
+    }
+
+    public static Method mapMethod(java.lang.reflect.Method m, String code) {
+        return Method.method()
+                .withAnnotations()
+                .addLastAnnotation(Annotation.annotation()
+                        .withAnnotationClass(Override.class)
+                        .withoutParameters()
+                        .build()
+                )
+                .withModifier(Utils.getModifier(m.getModifiers()))
+                .withReturnType(m.getReturnType())
+                .withName(m.getName())
+                .withParameters(() -> {
+                    Parameter[] p = m.getParameters();
+                    List<Pair<java.lang.Class<?>, String>> parameters = new ArrayList<>();
+                    for (int i = 0; i < p.length; i++)
+                        parameters.add(new Pair<>(p[i].getType(), "arg" + i));
+                    return parameters;
+                })
+                .withCode(code)
+                .build();
     }
 
     @Override
@@ -151,4 +171,7 @@ public class Method extends AbstractCodable implements Builder<Method>, MethodAn
         return this;
     }
 
+    public void setCode(String code) {
+        this.code = code;
+    }
 }

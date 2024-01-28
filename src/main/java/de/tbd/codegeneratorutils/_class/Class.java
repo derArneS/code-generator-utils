@@ -1,18 +1,15 @@
-package de.tbd.codegeneratorutils.clazz;
+package de.tbd.codegeneratorutils._class;
 
 import de.tbd.codegeneratorutils.*;
+import de.tbd.codegeneratorutils._interface.Interface;
 import de.tbd.codegeneratorutils.annotation.Annotation;
 import de.tbd.codegeneratorutils.method.Method;
+import de.tbd.codegeneratorutils.superclass.SuperClass;
 
-import java.lang.reflect.Parameter;
-import java.text.Collator;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Stream;
+import java.util.*;
 
 public class Class extends AbstractCodable implements Builder<Class>, ClassMethod, ClassInterface, ClassSuperClass,
-        ClassClassName, ClassAnnotation, ClassPackage {
+        ClassClassName, ClassAnnotation, ClassPackage, ClassCode {
 
     private String _package;
 
@@ -20,9 +17,9 @@ public class Class extends AbstractCodable implements Builder<Class>, ClassMetho
 
     private String className;
 
-    private final List<java.lang.Class<?>> superClasses = new ArrayList<>();
+    private final List<SuperClass> superClasses = new ArrayList<>();
 
-    private final List<java.lang.Class<?>> interfaces = new ArrayList<>();
+    private final List<Interface> interfaces = new ArrayList<>();
 
     private final List<Method> methods = new ArrayList<>();
 
@@ -32,39 +29,6 @@ public class Class extends AbstractCodable implements Builder<Class>, ClassMetho
 
     public static ClassPackage newClass() {
         return new Class();
-    }
-
-    private void extractMethodsFromInterfaces() {
-        for (java.lang.Class<?> interface1 : interfaces) {
-            java.lang.reflect.Method[] methods = interface1.getMethods();
-
-            Arrays.sort(methods, (o1, o2) ->
-                    Collator.getInstance().compare(o1.getName(), o2.getName()));
-
-            this.methods.addAll(Stream.of(methods).map(this::mapMethod).toList());
-        }
-    }
-
-    private Method mapMethod(java.lang.reflect.Method m) {
-        return Method.method()
-                .withAnnotations()
-                .addLastAnnotation(Annotation.annotation()
-                        .withAnnotationClass(Override.class)
-                        .withoutParameters()
-                        .build()
-                )
-                .withModifier(Utils.getModifier(m.getModifiers()))
-                .withReturnType(m.getReturnType())
-                .withName(m.getName())
-                .withParameters(() -> {
-                    Parameter[] p = m.getParameters();
-                    List<Pair<java.lang.Class<?>, String>> parameters = new ArrayList<>();
-                    for (int i = 0; i < p.length; i++)
-                        parameters.add(new Pair<>(p[i].getType(), "arg" + i));
-                    return parameters;
-                })
-                .withCode(null)
-                .build();
     }
 
     @Override
@@ -79,6 +43,9 @@ public class Class extends AbstractCodable implements Builder<Class>, ClassMetho
 
         append(curlyOpen, newLine, newLine);
 
+        for (Interface _interface : interfaces) {
+            _interface.getMethods().forEach(m -> append(m.getCodeAsString(tabLevel + 1), newLine));
+        }
         methods.forEach(m -> append(m.getCodeAsString(tabLevel + 1), newLine));
 
         append(curlyClose);
@@ -97,20 +64,20 @@ public class Class extends AbstractCodable implements Builder<Class>, ClassMetho
     }
 
     private void writeSuperClasses() {
-        append("extends ", superClasses.get(0).getSimpleName());
+        append("extends ", superClasses.get(0).getSuperClass().getSimpleName());
 
         for (int i = 1; i < superClasses.size(); i++) {
-            append(", ", superClasses.get(i).getSimpleName());
+            append(", ", superClasses.get(i).getSuperClass().getSimpleName());
         }
 
         append(space);
     }
 
     private void writeInterfaces() {
-        append("implements ", interfaces.get(0).getSimpleName());
+        append("implements ", interfaces.get(0).getInterface().getName());
 
         for (int i = 1; i < interfaces.size(); i++) {
-            append(", ", interfaces.get(i).getSimpleName());
+            append(", ", interfaces.get(i).getInterface().getName());
         }
 
         append(space);
@@ -152,54 +119,72 @@ public class Class extends AbstractCodable implements Builder<Class>, ClassMetho
     }
 
     @Override
-    public ClassInterface withSuperClass(java.lang.Class<?> superClass) {
+    public ClassInterface withSuperClass(SuperClass superClass) {
         superClasses.add(superClass);
         return this;
     }
 
     @Override
-    public ClassInterface withSuperClasses(List<java.lang.Class<?>> superClasses) {
+    public ClassInterface withSuperClasses(List<SuperClass> superClasses) {
         this.superClasses.addAll(superClasses);
         return this;
     }
 
     @Override
-    public ClassMethod withoutInterfaces() {
+    public ClassMethod withoutInterface() {
         return this;
     }
 
     @Override
-    public ClassMethod withInterface(java.lang.Class<?> _interface) {
+    public ClassMethod withInterface(Interface _interface) {
         interfaces.add(_interface);
         return this;
     }
 
     @Override
-    public ClassMethod withInterfaces(List<java.lang.Class<?>> interfaces) {
+    public ClassMethod withInterfaces(List<Interface> interfaces) {
         this.interfaces.addAll(interfaces);
         return this;
     }
 
     @Override
-    public Builder<Class> withoutMethod() {
+    public ClassCode withoutMethod() {
         return this;
     }
 
     @Override
-    public Builder<Class> withMethod(Method method) {
+    public ClassCode withMethod(Method method) {
         methods.add(method);
         return this;
     }
 
     @Override
-    public Builder<Class> withMethods(List<Method> methods) {
+    public ClassCode withMethods(List<Method> methods) {
         this.methods.addAll(methods);
         return this;
     }
 
     @Override
+    public Builder<Class> withoutOverrideCode() {
+        return this;
+    }
+
+    @Override
+    public Builder<Class> withOverrideCode(String methodName, String code) {
+        throw new IllegalStateException("not implemented");
+        //TODO code von richtiger Methode mit richtigen Parametern überschreiben
+        //return this;
+    }
+
+    @Override
+    public Builder<Class> withOverrideCode(Map<String, String> code) {
+        throw new IllegalStateException("not implemented");
+        //TODO code von richtiger Methode mit richtigen Parametern überschreiben
+        //return this;
+    }
+
+    @Override
     public Class build() {
-        extractMethodsFromInterfaces();
         return this;
     }
 
